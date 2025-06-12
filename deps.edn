@@ -1,0 +1,7 @@
+{:paths   ["src/clj"
+           "resources"]
+ :deps    {org.clojure/clojure {:mvn/version "1.12.0"}}
+ :aliases {:server {:main-opts ["-m" "app.core"]}
+           :dev    {:extra-paths ["dev"]
+                    :extra-deps  {nrepl/nrepl       {:mvn/version "1.11.132"}
+                                  cider/cider-nrepl {:mvn/version "0.52.0"}}}}}
