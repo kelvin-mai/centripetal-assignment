@@ -2,20 +2,27 @@
   (:require [com.stuartsierra.component :as component]
             [io.pedestal.connector :as conn]
             [io.pedestal.http.http-kit :as hk]
-            [app.routes :refer [routes]]))
+            [app.api.routes :refer [routes]]))
 
-(defrecord Pedestal [config]
+(defn- inject-datasource
+  [datasource]
+  {:name ::inject-components
+   :enter #(assoc-in % [:request :datasource] datasource)})
+
+(defrecord Pedestal [config json-datasource]
   component/Lifecycle
   (start [this]
-    (assoc this ::pedestal (-> (conn/default-connector-map (:port config))
-                               (conn/with-default-interceptors)
-                               (conn/with-routes routes)
-                               (hk/create-connector nil)
-                               (conn/start!))))
+    (println "Starting Pedestal...")
+    (assoc this :server (-> (conn/default-connector-map (:port config))
+                            (conn/with-interceptor (inject-datasource json-datasource))
+                            (conn/with-default-interceptors)
+                            (conn/with-routes routes)
+                            (hk/create-connector nil)
+                            (conn/start!))))
   (stop [this]
     (println "Stopping Pedestal...")
-    (conn/stop! (get this ::pedestal))
-    (assoc this ::pedestal nil)))
+    (conn/stop! (get this :server))
+    nil))
 
 (defn new-pedestal []
   (map->Pedestal {}))
