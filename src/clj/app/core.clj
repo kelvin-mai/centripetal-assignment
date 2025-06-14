@@ -1,4 +1,7 @@
-(ns app.core)
+(ns app.core
+  (:require [com.stuartsierra.component :as component]
+            [app.system.core :refer [new-system]]))
 
 (defn -main []
-  (println "hello world"))
+  (-> (new-system)
+      (component/start-system)))
