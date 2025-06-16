@@ -13,8 +13,8 @@
   component/Lifecycle
   (start [this]
     (println "Starting Pedestal...")
-    (println "Pedestal Server running on port" (:port config))
-    (assoc this :server (-> (conn/default-connector-map (:port config))
+    (println "Pedestal Server running on " (str (:host config) ":" (:port config)))
+    (assoc this :server (-> (conn/default-connector-map (:host config) (:port config))
                             (conn/with-interceptor (inject-datasource json-datasource))
                             (conn/with-default-interceptors)
                             (conn/with-routes routes)

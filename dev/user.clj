@@ -1,8 +1,7 @@
 (ns user
   (:require [com.stuartsierra.component :as component]
             [clj-reload.core]
-            [app.system.core :as system]
-            [io.pedestal.connector.test :as test]))
+            [app.system.core :as system]))
 
 (defonce *system (atom nil))
 
