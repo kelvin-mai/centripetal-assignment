@@ -14,6 +14,7 @@ This project uses the [Clojure CLI](https://clojure.org/guides/deps_and_cli) as 
 - [deps.edn](https://clojure.org/guides/deps_and_cli) - Clojure CLI build framework for managing dependencies
 - [tools.build](https://clojure.org/guides/tools_build) - Clojure build library for deps.edn based projects
 - [test-runner](https://github.com/cognitect-labs/test-runner) - A test runner for clojure.test
+- [malli](https://github.com/metosin/malli) - Schema validation
 
 ## Routes
 

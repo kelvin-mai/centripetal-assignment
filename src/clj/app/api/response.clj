@@ -1,5 +1,7 @@
 (ns app.api.response
-  (:require [cheshire.core :as json]))
+  (:require [cheshire.core :as json]
+            [malli.core :as m]
+            [malli.error :as me]))
 
 (defn response
   ([status]
@@ -13,3 +15,8 @@
 (def created (partial response 201))
 (def accepted (partial response 202))
 (def not-found (partial response 404))
+
+(defn malli-error [schema body]
+  (response 400
+            (-> (m/explain schema body)
+                (me/humanize))))

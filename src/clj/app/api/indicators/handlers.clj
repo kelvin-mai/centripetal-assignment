@@ -1,6 +1,8 @@
 (ns app.api.indicators.handlers
-  (:require [app.api.response :refer [ok not-found]]
-            [app.api.indicators.datasource :as db]))
+  (:require [malli.core :as m]
+            [app.api.response :as response :refer [ok not-found]]
+            [app.api.indicators.datasource :as db]
+            [app.api.indicators.schema :as schema]))
 
 (defn get-indicators [request]
   (let [ds (get request :datasource)
@@ -21,25 +23,30 @@
 (defn search-indicators [request]
   (let [ds (get request :datasource)
         body (get request :json-params)
-        props (select-keys body [:tlp
-                                 :author_name
-                                 :name
-                                 :description
-                                 :tags])
-        docs (reduce-kv
-              (fn [db k v]
-                (case k
-                  (:tlp :author_name :name :description)
-                  (db/docs-includes-string-kv db k v)
+        valid? (m/validate schema/search-params body)]
+    (if (not valid?)
+      (response/malli-error schema/search-params body)
+      (let [props (select-keys body [:tlp
+                                     :author_name
+                                     :name
+                                     :description
+                                     :tags])
+            docs (reduce-kv
+                  (fn [db k v]
+                    (case k
+                      (:tlp :author_name :name :description)
+                      (db/docs-includes-string-kv db k v)
 
-                  (:tags)
-                  (db/docs-includes-tags db v)
+                      (:tags)
+                      (db/docs-includes-tags db v)
 
-                  :else
-                  db))
-              ds
-              props)]
-    (ok docs)))
+                      :else
+                      db))
+                  ds
+                  props)]
+        (if (empty? docs)
+          (not-found)
+          (ok docs))))))
 
 (def routes
   [["/api/indicators" :get get-indicators :route-name ::get-indicators]
