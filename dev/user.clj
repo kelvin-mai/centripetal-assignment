@@ -19,7 +19,5 @@
   (start!)
   (stop!)
   @*system
-  (get-in @*system [:json-datasource :datasource])
-  (test/response-for
-   (get-in @*system [:pedestal :server])
-   :get "/api/indicators/id"))
+  ;;
+  )
