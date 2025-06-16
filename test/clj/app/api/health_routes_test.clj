@@ -13,4 +13,4 @@
       (is (= (:status response) 200))
       (is (= (get-in response [:headers :content-type]) "application/json"))
       (is (= (json/decode (:body response) true)
-             {:hello "world"})))))
+             {:healthy true})))))

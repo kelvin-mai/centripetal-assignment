@@ -3,7 +3,7 @@
             [app.api.indicators.handlers :as indicators]))
 
 (defn health-check [_]
-  (ok {:hello "world"}))
+  (ok {:healthy true}))
 
 (def routes
   (set (concat [["/api/health-check" :get health-check :route-name ::health-check]]
